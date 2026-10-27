@@ -1,0 +1,43 @@
+{
+  "name": "jwt-parser",
+  "version": "0.0.0",
+  "description": "JWT を依存ゼロでデコードする CLI",
+  "license": "MIT",
+  "author": "Tatsuya Yamamoto",
+  "bin": {
+    "jwt-parse": "./dist/cli.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "vp pack",
+    "dev": "vp pack --watch",
+    "test": "vp test",
+    "check": "vp check",
+    "prepublishOnly": "vp run build",
+    "start": "node src/cli.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "bumpp": "^12.3.0",
+    "typescript": "^7.0.2",
+    "vite-plus": "catalog:"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.15.0",
+      "onFail": "download"
+    },
+    "runtime": {
+      "name": "node",
+      "version": "26.12.1",
+      "onFail": "download"
+    }
+  },
+  "engines": {
+    "node": ">=26"
+  }
+}
