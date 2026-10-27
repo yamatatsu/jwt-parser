@@ -1,8 +1,7 @@
 import { styleText } from "node:util";
+import { stringifyJson, type Paint, type Style } from "./json.ts";
 import type { DecodedJwt } from "./jwt.ts";
 import type { TimeInfo, TimeStatus } from "./time.ts";
-
-type Style = Parameters<typeof styleText>[0];
 
 export interface FormatOptions {
   color: boolean;
@@ -14,8 +13,13 @@ const STATUS_TEXT: Record<TimeStatus, [string, Style]> = {
   not_yet_valid: ["未到来", "yellow"],
 };
 
-export function formatJson(decoded: DecodedJwt, times: TimeInfo[]): string {
-  return JSON.stringify({ ...decoded, times }, null, 2);
+function createPaint(options: FormatOptions): Paint {
+  return (style, text) =>
+    options.color ? styleText(style, text, { validateStream: false }) : text;
+}
+
+export function formatJson(decoded: DecodedJwt, times: TimeInfo[], options: FormatOptions): string {
+  return stringifyJson({ ...decoded, times }, createPaint(options));
 }
 
 export function formatPretty(
@@ -23,11 +27,10 @@ export function formatPretty(
   times: TimeInfo[],
   options: FormatOptions,
 ): string {
-  const paint = (style: Style, text: string) =>
-    options.color ? styleText(style, text, { validateStream: false }) : text;
+  const paint = createPaint(options);
   const heading = (text: string) => paint(["bold", "cyan"], text);
   const json = (value: unknown) =>
-    typeof value === "string" ? value : JSON.stringify(value, null, 2);
+    typeof value === "string" ? value : stringifyJson(value, paint);
 
   const lines: string[] = [];
   lines.push(heading("Header"), json(decoded.header), "");

@@ -68,10 +68,9 @@ function main(argv: string[]): number {
   try {
     const decoded = decodeJwt(input);
     const times = extractTimes(decoded.payload);
+    const options = { color: shouldColor(!values.color) };
     console.log(
-      values.json
-        ? formatJson(decoded, times)
-        : formatPretty(decoded, times, { color: shouldColor(!values.color) }),
+      values.json ? formatJson(decoded, times, options) : formatPretty(decoded, times, options),
     );
     return 0;
   } catch (error) {
