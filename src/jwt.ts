@@ -13,7 +13,12 @@ export class JwtParseError extends Error {
 const BASE64URL = /^[A-Za-z0-9_-]*$/;
 
 export function normalizeToken(input: string): string {
-  return input.trim().replace(/^Bearer\s+/i, "");
+  // Chrome DevTools からコピーすると前後に " が付いていることがある
+  return input
+    .trim()
+    .replace(/^"|"$/g, "")
+    .trim()
+    .replace(/^Bearer\s+/i, "");
 }
 
 function decodeSegment(segment: string, label: string): string {

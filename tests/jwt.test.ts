@@ -39,3 +39,13 @@ describe("decodeJwt", () => {
 test("normalizeToken", () => {
   expect(normalizeToken("bearer  x.y.z ")).toBe("x.y.z");
 });
+
+test.each([
+  ['"x.y.z"', "x.y.z"],
+  [' "x.y.z"\n', "x.y.z"],
+  ['"Bearer x.y.z"', "x.y.z"],
+  ['"x.y.z', "x.y.z"],
+  ['x.y.z"', "x.y.z"],
+])('normalizeToken は前後の " を取り除く: %j', (input, expected) => {
+  expect(normalizeToken(input)).toBe(expected);
+});
